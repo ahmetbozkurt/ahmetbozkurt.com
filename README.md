@@ -61,11 +61,6 @@ Check out [our documentation](https://docs.astro.build) or jump into our [Discor
 
 This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
 
-# 1. Tüm yeni dosyaları ve değişiklikleri ekle
 git add .
-
-# 2. Değişiklikleri bir mesajla paketle
-git commit -m "Yeni blog yazisi eklendi: İlk Deneme Yazım"
-
-# 3. Paketi GitHub'a gönder
+git commit -m "Read Me Update"
 git push
