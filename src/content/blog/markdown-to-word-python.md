@@ -5,7 +5,6 @@ pubDate: 'Nov 11 2025'
 heroImage: '../../assets/blog-placeholder-4.jpg'
 ---
 
-# Markdown Dosyalarını Python ile Word Formatına Dönüştürme
 
 Markdown, yazılım geliştiriciler ve teknik yazarlar arasında popüler bir formattır. Ancak bazen bu içeriği Word formatına dönüştürmemiz gerekebilir. Bu yazıda, Windows üzerinde Chocolatey paket yöneticisi ve Python kullanarak Markdown dosyalarını Word'e nasıl dönüştüreceğimizi göreceğiz.
 
