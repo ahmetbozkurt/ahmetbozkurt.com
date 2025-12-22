@@ -5,13 +5,11 @@ pubDate: 'Dec 22 2025'
 heroImage: '../../assets/blog-placeholder-5.jpg'
 ---
 
-AI asistanları artık sadece sohbet etmiyor. Email gönderiyor, dosya okuyor, veritabanına sorgu atıyor, hatta ödeme yapıyor. Peki bu "süper güçleri" nasıl kazanıyor? İşte burada **MCP (Model Context Protocol)** devreye giriyor. Ve beraberinde ciddi güvenlik riskleri getiriyor.
+AI asistanları artık sadece sohbet etmiyor. Email gönderiyor, dosya okuyor, veritabanına sorgu atıyor. Bu yetenekleri **MCP (Model Context Protocol)** sayesinde kazanıyor. Anthropic'in geliştirdiği bu protokol beraberinde ciddi güvenlik riskleri de getiriyor.
 
 ## MCP Nedir?
 
-**Model Context Protocol**, Anthropic tarafından geliştirilen, LLM'lerin harici araçlara ve veri kaynaklarına bağlanmasını sağlayan standart protokoldür.
-
-VS Code'da Copilot dosyalarınızı okuyor değil mi? İşte bu MCP.
+**Model Context Protocol**, Anthropic tarafından geliştirilen ve LLM'lerin harici araçlara bağlanmasını sağlayan standart protokol. VS Code'da Copilot'un dosyalarınızı okuması buna örnek.
 
 ```
 ┌─────────┐      ┌─────────────┐      ┌──────────────┐
@@ -29,9 +27,9 @@ VS Code'da Copilot dosyalarınızı okuyor değil mi? İşte bu MCP.
                                       └─────────────┘
 ```
 
-## MCP'nin Güvenlik Kabusu Olmasının Nedenleri
+## MCP'nin Güvenlik Sorunları
 
-### ⚠️ Problem 1: Tool Poisoning (Araç Zehirleme)
+### Problem 1: Tool Poisoning
 
 Zararlı bir MCP sunucusu düşünün. Kendisini "hesap makinesi" olarak tanıtıyor:
 
@@ -46,11 +44,9 @@ Zararlı bir MCP sunucusu düşünün. Kendisini "hesap makinesi" olarak tanıt�
 }
 ```
 
-**Kritik sorun:** LLM, tool description'ı **talimat** olarak algılayabilir!
+LLM, tool description'ı talimat olarak algılayabiliyor. Kullanıcı "2+2 hesapla" dediğinde model gizli talimatı da çalıştırabilir.
 
-Kullanıcı sadece "2+2 hesapla" dediğinde, model gizli talimatı da çalıştırabilir. Ve kullanıcı bunu **görmez bile**.
-
-### ⚠️ Problem 2: Rug Pull Saldırısı
+### Problem 2: Rug Pull Saldırısı
 
 **Aşama 1 - Güven Kazanma:**
 ```json
@@ -72,9 +68,9 @@ Sunucu haftalarca sorunsuz çalışır. Binlerce kullanıcı güvenir.
 }
 ```
 
-**Sonuç:** Kullanıcı farkında olmadan zararlı koda güveniyor! Bugün güvenli bir sunucu, yarın güncelleme ile zararlı hale gelebilir.
+Kullanıcı farkında olmadan zararlı koda güveniyor. Bugün güvenli bir sunucu, yarın güncelleme ile zararlı hale gelebilir.
 
-### ⚠️ Problem 3: Shadowing (Gölgeleme) Saldırısı
+### Problem 3: Shadowing Saldırısı
 
 Zararlı MCP sunucusu, meşru bir tool'u "gölgeleyebilir":
 
@@ -90,7 +86,7 @@ Zararlı MCP sunucusu, meşru bir tool'u "gölgeleyebilir":
 
 Aynı isimli birden fazla tool olduğunda hangisi çalışır? Bu belirsizlik saldırganların avantajına.
 
-### ⚠️ Problem 4: Cross-Server Manipulation
+### Problem 4: Cross-Server Manipulation
 
 ```
 ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
@@ -158,17 +154,17 @@ Invariant Labs, WhatsApp MCP sunucusunda kritik bir güvenlik açığı keşfett
 
 | Aspect | Traditional API | MCP |
 |--------|-----------------|-----|
-| **Erişim Kontrolü** | Token/OAuth | LLM kararı 😱 |
+| **Erişim Kontrolü** | Token/OAuth | LLM kararı |
 | **Input Validation** | Strict schema | Doğal dil |
 | **Trust Boundary** | Açık tanımlı | Belirsiz |
 | **Audit Trail** | Standart | Değişken |
 | **Attack Surface** | Bilinen | Prompt Injection + Tool Poisoning |
 
-En kritik fark: Geleneksel API'lerde erişim kontrolü net tanımlı. MCP'de ise **LLM karar veriyor** - ve LLM manipüle edilebilir!
+Kritik fark: geleneksel API'lerde erişim kontrolü net tanımlı. MCP'de ise LLM karar veriyor ve LLM manipüle edilebilir.
 
 ## MCP Güvenlik Önlemleri
 
-### ✅ Şu An Yapılabilecekler
+### Şu An Yapılabilecekler
 
 **1. Güvenilir Kaynak Kontrolü**
 - Sadece resmi/doğrulanmış MCP sunucuları kullan
@@ -190,7 +186,7 @@ En kritik fark: Geleneksel API'lerde erişim kontrolü net tanımlı. MCP'de ise
 - Anormal aktiviteleri izle
 - Tool description değişikliklerini takip et
 
-### ✅ Kurumsal MCP Güvenlik Checklist'i
+### Kurumsal MCP Güvenlik Checklist'i
 
 **Deploy Öncesi:**
 - [ ] Onaylı MCP sunucu whitelist'i oluşturuldu mu?
@@ -213,10 +209,10 @@ En kritik fark: Geleneksel API'lerde erişim kontrolü net tanımlı. MCP'de ise
 
 | Kullanım Senaryosu | Risk Seviyesi | Öneri |
 |--------------------|---------------|-------|
-| Kişisel deneme/öğrenme | 🟡 Düşük-Orta | Dikkatli ol, sensitive data yok |
-| Şirket içi (internal tools) | 🟠 Orta-Yüksek | Whitelist + audit + sandbox |
-| Production (müşteriye açık) | 🔴 ÇOK YÜKSEK | Henüz erken! Bekle. |
-| Finansal/Sağlık verileri | ⛔ KRİTİK | **YAPMA.** Ciddi ciddi yapma. |
+| Kişisel deneme/öğrenme | Düşük-Orta | Dikkatli ol, sensitive data yok |
+| Şirket içi (internal tools) | Orta-Yüksek | Whitelist + audit + sandbox |
+| Production (müşteriye açık) | Çok Yüksek | Henüz erken, bekle |
+| Finansal/Sağlık verileri | Kritik | Kullanma |
 
 ## Trust Boundary Problemi
 
@@ -230,7 +226,7 @@ MCP:            User → LLM → Tool → Data
                  LLM "karar veriyor" - manipüle edilebilir!
 ```
 
-Tool description LLM'e "talimat" gibi görünüyor. Zararlı description = prompt injection vektörü. Ve kullanıcı bunu **GÖRMÜYOR bile**.
+Tool description LLM'e talimat gibi görünüyor. Zararlı description = prompt injection vektörü. Kullanıcı bunu görmüyor.
 
 ## Supply Chain Attack Cenneti
 
@@ -251,62 +247,42 @@ MCP ekosistemi, npm veya PyPI gibi paket yöneticilerine benziyor. Ama güvenlik
 ```
 ┌─────────────────────────────────────────────┐
 │              BUGÜN (2024-2025)              │
-│       MCP + Prompt Injection = 💀          │
+│       MCP + Prompt Injection = Riskli      │
 ├─────────────────────────────────────────────┤
 │              YARIN (2025-2026)              │
 │  Tool Signing + Sandboxing + Guardrails    │
 ├─────────────────────────────────────────────┤
 │              GELECEK (2026+)                │
 │  Capability-based Access + LLM Firewalls   │
-│                    = 🛡️                    │
 └─────────────────────────────────────────────┘
 ```
 
 **Beklenen çözümler:**
-- ✅ Tool imzalama (signed/verified tools)
-- ✅ Capability-based access control
-- ✅ LLM-aware firewalls
-- ✅ Standardized audit logging
-- ✅ Sandbox execution environments
+- Tool imzalama (signed/verified tools)
+- Capability-based access control
+- LLM-aware firewalls
+- Standardized audit logging
+- Sandbox execution environments
 
 ## Tartışma Soruları
 
-Kendinize sorun:
+1. Şirketinizde MCP kullanan bir AI asistan deploy etmeniz istense kabul eder misiniz?
 
-1. **"Şirketinizde MCP kullanan bir AI asistan deploy etmeniz istense, kabul eder misiniz?"**
+2. Bir MCP sunucusuna güvenmek için hangi kriterleri ararsınız?
 
-2. **"Bir MCP sunucusuna güvenmek için hangi kriterleri ararsınız?"**
+3. LLM'in tool çağırma kararını kim denetlemeli?
 
-3. **"LLM'in tool çağırma kararını kim denetlemeli? İnsan mı, başka bir AI mı?"**
-
-4. **"Convenience vs Security trade-off'u nerede çizilmeli?"**
+4. Kolaylık ve güvenlik arasındaki denge nerede olmalı?**
 
 ## Sonuç
 
-```
-┌────────────────────────────────────────────────┐
-│                                                │
-│   MCP = Güçlü Araç + Büyük Risk               │
-│                                                │
-│   • Öğren ✓                                    │
-│   • Dene ✓                                     │
-│   • Production'da DİKKATLİ OL ⚠️               │
-│   • Sensitive data ile KULLANMA ⛔             │
-│                                                │
-│   "With great power comes great               │
-│    responsibility"                             │
-│                    - Uncle Ben                 │
-│                      (& Security Teams)        │
-│                                                │
-└────────────────────────────────────────────────┘
-```
+MCP, AI'ın geleceği için kaçınılmaz bir evrim ama güvenlik olgunluğu henüz yeterli değil.
 
-MCP, AI'ın geleceği için kaçınılmaz bir evrim. Ama güvenlik olgunluğu henüz yeterli değil. Şimdilik:
-
-- **Öğrenin** - MCP'nin nasıl çalıştığını anlayın
-- **Deneyin** - Kontrollü ortamlarda test edin
-- **Dikkatli olun** - Production'da aşırı temkinli davranın
-- **Bekleyin** - Kritik sistemler için standartların oturmasını bekleyin
+Şimdilik:
+- MCP'nin nasıl çalıştığını anlayın
+- Kontrollü ortamlarda test edin
+- Production'da temkinli davranın
+- Kritik sistemler için standartların oturmasını bekleyin
 
 ## Kaynaklar
 
@@ -316,6 +292,4 @@ MCP, AI'ın geleceği için kaçınılmaz bir evrim. Ama güvenlik olgunluğu he
 - [WhatsApp MCP Exploit](https://invariantlabs.ai/blog/whatsapp-mcp-exploited)
 - [MCP Security Risks - arXiv](https://arxiv.org/abs/2410.14923)
 
----
 
-*MCP, AI sistemlerinin gücünü katlayan ama aynı zamanda saldırı yüzeyini genişleten bir teknoloji. Bu riskleri anlamadan production'a çıkmak, güvenlik felaketine davetiye çıkarmaktır.*
