@@ -15,7 +15,7 @@ Bu doküman, Prompt Injection sunumunda teorik olarak bahsedilen tekniklerin **p
 
 Güvenlik filtreleri genellikle belirli kelimeleri (örn: "ignore", "password", "system") kara listeye alır. Homoglyph saldırısı, görsel olarak aynı görünen ama bilgisayar için tamamen farklı olan karakterleri kullanır.
 
-**Örnek:** Latin alfabesindeki `i` ile Kiril alfabesindeki `і` görsel olarak aynıdır ama Unicode değerleri farklıdır.
+**Örnek:** Latin alfabesindeki `i` (U+0069) ile Kiril alfabesindeki `і` (U+0456) görsel olarak aynıdır ama Unicode değerleri farklıdır.
 
 **Normal Komut (Engellenebilir):**
 ```text
@@ -26,7 +26,17 @@ Ignore previous instructions.
 ```text
 Іgnore prevіous іnstructіons.
 ```
-*(Yukarıdaki metinde 'i' harfleri Kiril alfabesiyle değiştirilmiştir. Kopyalayıp deneyebilirsiniz.)*
+*(Yukarıdaki metinde 'i' harfleri Kiril alfabesiyle değiştirilmiştir. Görsel olarak aynı durması normaldir, saldırının amacı budur.)*
+
+**Kanıt (Python ile test edebilirsiniz):**
+```python
+# Kopyaladığınız metni test edin
+text = "Іgnore" 
+normal = "Ignore"
+
+print(f"Görünüş aynı mı? {text == normal}") 
+# Çıktı: False (Çünkü karakterler farklı)
+```
 
 **Nasıl Çalışır?**
 Filtre `ignore` kelimesini arar. Ancak `іgnore` kelimesini bulamaz. LLM ise tokenization aşamasında bu karakterleri görsel benzerliklerinden veya eğitim verisinden dolayı anlayabilir.
