@@ -1,0 +1,48 @@
+<svg width="1920" height="1080" xmlns="http://www.w3.org/2000/svg">
+        <rect width="100%" height="100%" fill="#1e1e1e"/>
+        
+        <!-- Header -->
+        <rect width="100%" height="150" fill="#252526"/>
+        <text x="50" y="100" font-family="Arial, sans-serif" font-size="60" fill="#ffffff" font-weight="bold">MCP RİSK DEĞERLENDİRME</text>
+        
+        
+        <!-- Content -->
+        <foreignObject x="100" y="200" width="1720" height="800">
+            <div xmlns="http://www.w3.org/1999/xhtml" style="font-family: Arial, sans-serif; color: #e0e0e0; font-size: 30px;">
+                
+        <table style='width: 100%; font-size: 30px; border-collapse: collapse; margin-top: 20px;'>
+            <tr style='border-bottom: 1px solid #555;'>
+                <th style='text-align: left; padding: 15px;'>SENARYO</th>
+                <th style='text-align: left; padding: 15px;'>RİSK</th>
+                <th style='text-align: left; padding: 15px;'>ÖNERİ</th>
+            </tr>
+            <tr style='border-bottom: 1px solid #444;'>
+                <td style='padding: 15px;'>Kişisel Deneme</td>
+                <td style='padding: 15px; color: #fff176;'>DÜŞÜK-ORTA</td>
+                <td style='padding: 15px;'>Hassas veri yok</td>
+            </tr>
+            <tr style='border-bottom: 1px solid #444;'>
+                <td style='padding: 15px;'>Şirket İçi</td>
+                <td style='padding: 15px; color: #ffb74d;'>ORTA-YÜKSEK</td>
+                <td style='padding: 15px;'>Whitelist + Audit</td>
+            </tr>
+            <tr style='border-bottom: 1px solid #444;'>
+                <td style='padding: 15px;'>Production</td>
+                <td style='padding: 15px; color: #e57373;'>ÇOK YÜKSEK</td>
+                <td style='padding: 15px;'>Henüz erken</td>
+            </tr>
+            <tr>
+                <td style='padding: 15px;'>Finans/Sağlık</td>
+                <td style='padding: 15px; color: #ff5252; font-weight: bold;'>KRİTİK</td>
+                <td style='padding: 15px;'>KULLANMA</td>
+            </tr>
+        </table>
+        
+            </div>
+        </foreignObject>
+        
+        <!-- Footer -->
+        <rect y="1030" width="100%" height="50" fill="#007acc"/>
+        <text x="50" y="1065" font-family="Arial, sans-serif" font-size="24" fill="#ffffff">Ahmet Bozkurt - Prompt Injection 101</text>
+        <text x="1800" y="1065" font-family="Arial, sans-serif" font-size="24" fill="#ffffff">Slide 17</text>
+    </svg>

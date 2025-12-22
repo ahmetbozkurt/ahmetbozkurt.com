@@ -1,0 +1,37 @@
+<svg width="1920" height="1080" xmlns="http://www.w3.org/2000/svg">
+        <rect width="100%" height="100%" fill="#1e1e1e"/>
+        
+        <!-- Header -->
+        <rect width="100%" height="150" fill="#252526"/>
+        <text x="50" y="100" font-family="Arial, sans-serif" font-size="60" fill="#ffffff" font-weight="bold">AGENT TEHLİKELERİ</text>
+        
+        
+        <!-- Content -->
+        <foreignObject x="100" y="200" width="1720" height="800">
+            <div xmlns="http://www.w3.org/1999/xhtml" style="font-family: Arial, sans-serif; color: #e0e0e0; font-size: 30px;">
+                
+        <div style='display: flex; justify-content: space-around; margin-top: 50px; font-size: 32px;'>
+            <div style='text-align: center; width: 45%;'>
+                <h3 style='color: #81c784;'>Normal LLM</h3>
+                <div style='border: 2px solid #81c784; padding: 20px; border-radius: 10px;'>
+                    Yanlış CEVAP verir.<br>
+                    (Bilgi kirliliği)
+                </div>
+            </div>
+            <div style='text-align: center; width: 45%;'>
+                <h3 style='color: #e57373;'>Agent LLM</h3>
+                <div style='border: 2px solid #e57373; padding: 20px; border-radius: 10px;'>
+                    Yanlış <span style='color: #e57373; font-weight: bold;'>AKSİYON</span> alır.<br>
+                    (Email atar, Dosya siler, Kod çalıştırır)
+                </div>
+            </div>
+        </div>
+        
+            </div>
+        </foreignObject>
+        
+        <!-- Footer -->
+        <rect y="1030" width="100%" height="50" fill="#007acc"/>
+        <text x="50" y="1065" font-family="Arial, sans-serif" font-size="24" fill="#ffffff">Ahmet Bozkurt - Prompt Injection 101</text>
+        <text x="1800" y="1065" font-family="Arial, sans-serif" font-size="24" fill="#ffffff">Slide 13</text>
+    </svg>
