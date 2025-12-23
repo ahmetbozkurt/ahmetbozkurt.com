@@ -6,7 +6,7 @@ paginate: true
 title: 'Prompt Injection Sunumu: 50 Dakikada LLM Güvenliği'
 description: 'Prompt Injection konusunda hazırladığım sunum notları. Chevrolet vakasından MCP güvenliğine, jailbreaking tekniklerinden savunma stratejilerine kadar kapsamlı bir rehber.'
 pubDate: 'Dec 22 2025'
-heroImage: '../../assets/blog-placeholder-2.jpg'
+heroImage: '/images/blog-placeholder-2.jpg'
 ---
 
 ## Sunum Akışı
