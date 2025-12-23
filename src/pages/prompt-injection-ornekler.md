@@ -1,4 +1,5 @@
 ---
+layout: ../layouts/MarkdownPost.astro
 title: 'Prompt Injection: Örnek Payload ve Teknikler'
 description: 'Prompt Injection sunumuna ek olarak hazırlanan, kopyalanıp test edilebilecek teknik saldırı örnekleri ve payload listesi.'
 pubDate: 'Dec 22 2025'

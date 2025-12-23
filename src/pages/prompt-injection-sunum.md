@@ -1,4 +1,5 @@
 ---
+layout: ../layouts/MarkdownPost.astro
 marp: true
 theme: default
 paginate: true
