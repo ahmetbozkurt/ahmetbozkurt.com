@@ -2,7 +2,7 @@
 title: 'MCP Güvenlik Zafiyetleri: AI Agent Sistemlerinin Yeni Kabusu'
 description: 'Model Context Protocol (MCP) nedir, tool poisoning ve rug pull saldırıları nasıl çalışır, kurumsal ortamlarda MCP güvenliği nasıl sağlanır?'
 pubDate: 'Dec 22 2025'
-heroImage: '../../assets/blog-placeholder-5.jpg'
+heroImage: '/images/mcp.png'
 ---
 
 AI asistanları artık sadece sohbet etmiyor. Email gönderiyor, dosya okuyor, veritabanına sorgu atıyor. Bu yetenekleri **MCP (Model Context Protocol)** sayesinde kazanıyor. Anthropic'in geliştirdiği bu protokol beraberinde ciddi güvenlik riskleri de getiriyor.

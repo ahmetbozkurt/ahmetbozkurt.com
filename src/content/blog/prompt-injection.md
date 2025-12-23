@@ -2,7 +2,7 @@
 title: 'Prompt Injection: LLM Güvenliğinin En Büyük Tehdidi'
 description: 'OWASP LLM Top 10 listesinde 1 numarada yer alan Prompt Injection saldırılarını, gerçek dünya vakalarını ve korunma yöntemlerini detaylı olarak inceliyoruz.'
 pubDate: 'Dec 22 2025'
-heroImage: '../../assets/blog-placeholder-3.jpg'
+heroImage: '/images/prompt_injection.png'
 ---
 
 ChatGPT, Claude, Copilot derken yapay zeka asistanları artık her yerde. OWASP'ın LLM Top 10 listesine baktığınızda 1 numarada **Prompt Injection** var. Bu yazıda ne olduğunu, nasıl çalıştığını ve neden önemli olduğunu anlatacağım.

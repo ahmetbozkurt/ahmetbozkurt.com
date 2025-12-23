@@ -2,7 +2,7 @@
 title: 'Markdown Dosyalarını Python ile Word Formatına Dönüştürme'
 description: 'Chocolatey, Python ve Pandoc kullanarak Markdown dosyalarını profesyonel Word belgelerine nasıl dönüştüreceğinizi öğrenin'
 pubDate: 'Nov 11 2025'
-heroImage: '../../assets/blog-placeholder-4.jpg'
+heroImage: '/images/markdown_python.png'
 ---
 
 
