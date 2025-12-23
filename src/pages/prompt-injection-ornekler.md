@@ -4,6 +4,7 @@ title: 'Prompt Injection: Örnek Payload ve Teknikler'
 description: 'Prompt Injection sunumuna ek olarak hazırlanan, kopyalanıp test edilebilecek teknik saldırı örnekleri ve payload listesi.'
 pubDate: 'Dec 22 2025'
 heroImage: '/images/blog-placeholder-2.jpg'
+hideTitle: true
 ---
 
 Bu doküman, Prompt Injection sunumunda teorik olarak bahsedilen tekniklerin **pratik ve kopyalanabilir** örneklerini içerir. Bu örnekleri kendi test ortamlarınızda (LM Studio, yerel LLM'ler veya Gandalf gibi CTF platformlarında) deneyebilirsiniz.
