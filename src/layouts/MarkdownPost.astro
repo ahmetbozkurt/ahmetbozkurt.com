@@ -1,7 +1,16 @@
 ---
 import BlogPost from './BlogPost.astro';
 const { frontmatter } = Astro.props;
+
+const pubDate = frontmatter.pubDate ? new Date(frontmatter.pubDate) : undefined;
+const updatedDate = frontmatter.updatedDate ? new Date(frontmatter.updatedDate) : undefined;
+
+const props = {
+	...frontmatter,
+	pubDate,
+	updatedDate,
+};
 ---
-<BlogPost {...frontmatter}>
+<BlogPost {...props}>
 	<slot />
 </BlogPost>
