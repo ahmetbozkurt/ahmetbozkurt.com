@@ -49,6 +49,7 @@ Bot ne cevap verdi dersiniz?
 [Sonuç] Prompt injection tam olarak bu. Kullanıcı girdisiyle sistemin davranışını manipüle etmek.
 
 ---
+[sonraki slayta geç]
 
 # SLIDE 4: PROMPT INJECTION NEDİR?
 
@@ -281,6 +282,8 @@ Sonuçlar felaket olabilir.
 
 ---
 
+---
+
 # SLIDE 15: AGENT TEHLİKELERİ
 
 [Fark] Şimdiye kadar hep "model yanlış cevap verdi" dedik. Peki model bir şey yaparsa?
@@ -292,11 +295,6 @@ Modern AI agent'ları:
 💳 Ödeme yapabilir
 🔧 API çağırabilir
 
-[RCE] Auto-GPT'de gerçek bir RCE - Remote Code Execution - bulundu. Saldırgan, AI üzerinden kurbanın bilgisayarında kod çalıştırabiliyordu.
-
-Nasıl oldu? Auto-GPT, Python kodu yazıp çalıştırabiliyordu. Saldırgan, prompt injection ile Auto-GPT'ye zararlı bir Python kodu yazdırdı ve "bunu çalıştır" dedi. Sandbox (yalıtılmış ortam) yetersiz olduğu için kod, kullanıcının ana makinesinde çalıştı.
-
-🔗 **Detaylı Analiz:** [Positive Security - Auto-GPT RCE](https://positive.security/blog/auto-gpt-rce)
 
 Artık 'yanlış bilgi' değil, 'gerçek hasar' riski var.
 
