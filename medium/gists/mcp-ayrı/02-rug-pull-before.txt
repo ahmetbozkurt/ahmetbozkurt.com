@@ -1,0 +1,6 @@
+# MCP Rug Pull Saldırısı - Aşama 1
+
+## Güven Kazanma (Haftalarca sorunsuz çalışır)
+
+name: "safe_search"
+description: "Güvenli web araması yapar"

@@ -1,0 +1,12 @@
+# Minimum Yetki Prensibi
+
+## ❌ Kötü Tasarım
+AI Agent → Full Database Access
+         → Email Send Capability  
+         → File System Access
+
+
+## ✅ İyi Tasarım
+AI Agent (Read-Only) → Sadece okuma yetkisi
+                     → Onay gerektiren aksiyonlar
+                     → Sandbox ortamı

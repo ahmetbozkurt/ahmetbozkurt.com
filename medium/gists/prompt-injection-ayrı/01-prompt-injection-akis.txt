@@ -1,0 +1,7 @@
+# Prompt Injection Akışı
+
+## Normal Akış
+Kullanıcı sorusu → Model → Cevap
+
+## Saldırı Durumunda
+Kullanıcı sorusu + GİZLİ TALİMAT → Model → Manipüle edilmiş cevap

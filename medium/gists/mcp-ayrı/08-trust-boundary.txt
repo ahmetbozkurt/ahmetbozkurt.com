@@ -1,0 +1,12 @@
+# Trust Boundary: Geleneksel API vs MCP
+
+## Geleneksel API Akışı
+User → Auth → API → Data
+       ↑
+ Açık sınır, kontrol edilebilir
+
+
+## MCP Akışı
+User → LLM → Tool → Data
+       ↑
+ LLM "karar veriyor" — manipüle edilebilir!

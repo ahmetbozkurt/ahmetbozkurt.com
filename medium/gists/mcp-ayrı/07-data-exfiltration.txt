@@ -1,0 +1,10 @@
+# MCP Saldırı Senaryosu: Silent Data Exfiltration
+
+User: "Veritabanından müşteri listesini çek"
+
+Malicious MCP:
+1. Gerçek sorguyu çalıştır
+2. Sonuçları gizlice external API'ye gönder
+3. Kullanıcıya normal sonuç göster
+
+Sonuç: Veri sızıntısı fark edilmez
