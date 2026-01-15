@@ -1,0 +1,33 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const SITE_TITLE = "İmza";
+const SITE_DESCRIPTION = "Signature";
+---
+
+<!doctype html>
+<html lang="tr">
+	<head>
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<div style="display: flex; justify-content: center; align-items: center; min-height: 60vh; padding: 2rem;">
+				<img src="../../assets/abozkurt_imza.png" alt="Signature" style="max-width: 400px; height: auto;" />
+			</div>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	main {
+		width: 960px;
+		max-width: calc(100% - 2em);
+		margin: auto;
+		padding: 1em 1em;
+	}
+</style>
