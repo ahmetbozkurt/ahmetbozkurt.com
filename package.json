@@ -8,7 +8,8 @@
     "preview": "astro preview",
     "astro": "astro",
     "generate:post": "node scripts/generate-post.mjs",
-    "generate:review": "node scripts/agent-review.mjs"
+    "generate:review": "node scripts/agent-review.mjs",
+    "test:post": "node scripts/test-post.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.9",
