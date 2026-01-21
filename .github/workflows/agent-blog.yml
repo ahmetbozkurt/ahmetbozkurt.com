@@ -1,0 +1,73 @@
+name: Generate Astro Blog with Custom Agent
+
+on:
+  workflow_dispatch:
+    inputs:
+      topic:
+        description: "Konu (blog başlığı)"
+        required: true
+        type: string
+      lang:
+        description: "Dil (tr/en)"
+        required: false
+        default: "tr"
+        type: string
+      slug:
+        description: "İsteğe bağlı slug"
+        required: false
+        type: string
+  schedule:
+    # Haftalık örnek tetikleyici (Pazartesi 08:00 UTC)
+    - cron: '0 8 * * 1'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: |
+          npm i --no-audit --no-fund
+
+      - name: Generate blog post with agent
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          AGENT_URL: ${{ secrets.AGENT_URL }}
+          AGENT_API_KEY: ${{ secrets.AGENT_API_KEY }}
+        run: |
+          node scripts/generate-post.mjs \
+            --topic "${{ inputs.topic || 'Custom Agent ile Astro Blog Üretimi: SDLC ve GitHub Süreci' }}" \
+            --lang "${{ inputs.lang || 'tr' }}" \
+            --slug "${{ inputs.slug || '' }}"
+
+      - name: Multi-agent review (Developer/PM/Tester/Reviewer/Security)
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          AGENT_URL: ${{ secrets.AGENT_URL }}
+          AGENT_API_KEY: ${{ secrets.AGENT_API_KEY }}
+        run: |
+          node scripts/agent-review.mjs
+
+      - name: Validate Astro build
+        run: |
+          npm run build
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "chore(content): agent-generated blog post"
+          title: "Agent-generated blog post"
+          body-path: AGENT_PR_BODY.md
+          branch: chore/agent-blog-post
+          delete-branch: true

@@ -1,4 +1,5 @@
-# build output
+.agent/
+AGENT_PR_BODY.md# build output
 dist/
 # generated types
 .astro/

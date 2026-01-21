@@ -15,6 +15,49 @@ Features:
 - ✅ RSS Feed support
 - ✅ Markdown & MDX support
 
+## Agent-Driven Blog Generation (SDLC + GitHub)
+
+This repo includes an automated flow to generate Astro blog posts using a custom agent.
+
+- Script: `scripts/generate-post.mjs`
+	- Calls a custom agent via `AGENT_URL`/`AGENT_API_KEY` (HTTP JSON).
+	- Falls back to `OPENAI_API_KEY` if available.
+	- Finally uses a local template if no agent is configured.
+	- Writes a new Markdown file to `src/content/blog/` with required frontmatter.
+
+- Workflow: `.github/workflows/agent-blog.yml`
+	- Trigger: manual (`workflow_dispatch`) with inputs, or weekly schedule.
+	- Steps: checkout → install → generate → build (schema validation) → open PR.
+	- Secrets to configure (in GitHub repo settings → Secrets and variables → Actions):
+		- `AGENT_URL` (optional): Your custom agent endpoint (POST JSON).
+		- `AGENT_API_KEY` (optional): Bearer token for your agent.
+		- `OPENAI_API_KEY` (optional): Fallback using OpenAI Chat Completions API.
+
+### Local Usage
+
+Generate a new post locally:
+
+```bash
+npm run generate:post -- --topic "Custom Agent ile Astro Blog Üretimi: SDLC ve GitHub Süreci" --lang tr
+```
+
+Then validate/build:
+
+```bash
+npm run build
+```
+
+Run multi-agent review locally (creates AGENT_PR_BODY.md):
+
+```bash
+npm run generate:review
+```
+
+### Notes
+- Frontmatter is validated against `src/content.config.ts`.
+- Default `heroImage` is `/images/blog-placeholder-2.jpg` — update as needed.
+- The workflow opens a PR for review to keep governance in place.
+
 ## 🚀 Project Structure
 
 Inside of your Astro project, you'll see the following folders and files:
