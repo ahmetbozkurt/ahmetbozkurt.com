@@ -1,5 +1,7 @@
 # Astro Starter Kit: Blog
 
+[![Generate Astro Blog with Custom Agent](https://github.com/ahmetbozkurt/ahmetbozkurt.com/actions/workflows/agent-blog.yml/badge.svg?branch=main)](https://github.com/ahmetbozkurt/ahmetbozkurt.com/actions/workflows/agent-blog.yml)
+
 ```sh
 npm create astro@latest -- --template blog
 ```
@@ -32,6 +34,7 @@ This repo includes an automated flow to generate Astro blog posts using a custom
 		- `AGENT_URL` (optional): Your custom agent endpoint (POST JSON).
 		- `AGENT_API_KEY` (optional): Bearer token for your agent.
 		- `OPENAI_API_KEY` (optional): Fallback using OpenAI Chat Completions API.
+		- `GH_PAT` (required for PR): Personal Access Token with `repo` scope. Used if org policy blocks `GITHUB_TOKEN` from creating PRs; the workflow creates a draft PR using this token.
 
 ### Local Usage
 
@@ -53,10 +56,21 @@ Run multi-agent review locally (creates AGENT_PR_BODY.md):
 npm run generate:review
 ```
 
+### Workflow & Governance
+
+**Default: PR-based (recommended)**
+- If `GH_PAT` is set, the workflow creates a draft PR for review.
+- Provides governance and explicit approval before merge.
+
+**Fallback: Direct commit to main**
+- If PR creation fails (e.g., no PAT or org policy), content commits directly to `main` with `[skip ci]`.
+- Ensures content is always published, even under restrictive org policies.
+- The workflow continues on error, so the job succeeds either way.
+
 ### Notes
 - Frontmatter is validated against `src/content.config.ts`.
-- Default `heroImage` is `/images/blog-placeholder-2.jpg` — update as needed.
-- The workflow opens a PR for review to keep governance in place.
+- Default `heroImage` is `../../assets/blog-placeholder-2.jpg` — update as needed.
+- Multi-agent reviews (Developer/PM/Tester/Reviewer/Security) are generated and included in the PR body for transparency.
 
 ## 🚀 Project Structure
 
