@@ -1,8 +1,8 @@
 # Agent-generated blog post
 
-- Topic: quantum bilgisayarlar hakkında yazı geleceğimiz nasıl şekillenecek
+- Topic: 2026 da teknolojilerin geleceği nokta hakkında yazı yaz
 - Lang: tr
-- File: src/content/blog/developer.md
+- File: src/content/blog/developer-1.md
 
 ## Multi-Agent Reviews
 
