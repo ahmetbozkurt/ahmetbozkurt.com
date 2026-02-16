@@ -1,8 +1,8 @@
 # Agent-generated blog post
 
-- Topic: 2026 da teknolojilerin geleceği nokta hakkında yazı yaz
+- Topic: Custom Agent ile Astro Blog Üretimi: SDLC ve GitHub Süreci
 - Lang: tr
-- File: src/content/blog/developer-1.md
+- File: src/content/blog/custom-agent-ile-astro-blog-uretimi-sdlc-ve-github-sureci.md
 
 ## Multi-Agent Reviews
 
