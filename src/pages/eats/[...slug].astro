@@ -1,0 +1,21 @@
+---
+import { type CollectionEntry, getCollection } from 'astro:content';
+import RestaurantLayout from '../../layouts/RestaurantLayout.astro';
+import { render } from 'astro:content';
+
+export async function getStaticPaths() {
+	const posts = await getCollection('restaurants');
+	return posts.map((post) => ({
+		params: { slug: post.id },
+		props: post,
+	}));
+}
+type Props = CollectionEntry<'restaurants'>;
+
+const post = Astro.props;
+const { Content } = await render(post);
+---
+
+<RestaurantLayout {...post.data}>
+	<Content />
+</RestaurantLayout>

@@ -1,0 +1,123 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { calculateOverall, toLetterGrade } from '../utils/scoring';
+
+interface Props {
+	restaurant: CollectionEntry<'restaurants'>;
+}
+
+const { restaurant } = Astro.props;
+const { data, id } = restaurant;
+const { name, category, location, scores, googleAtVisit, googleNow } = data;
+
+const overallScore = calculateOverall(scores);
+const grade = toLetterGrade(overallScore);
+
+const diffGoogle = (googleNow && googleAtVisit) ? (googleNow - googleAtVisit).toFixed(1) : null;
+const isGoogleImproved = diffGoogle ? parseFloat(diffGoogle) > 0 : false;
+---
+
+<a href={`/eats/${id}/`} class="restaurant-card">
+	<div class="card-header">
+		<h3>{name}</h3>
+		<span class="category-badge">{category}</span>
+	</div>
+	<div class="card-body">
+		<div class="score-display">
+			<span class={`grade grade-${grade.replace('+', 'plus').replace('-', 'minus')}`}>{grade}</span>
+			<span class="numeric-score">{overallScore}/10</span>
+		</div>
+		<div class="details">
+			<p><strong>📍</strong> {location}</p>
+			{googleNow && (
+				<p>
+					<strong>Google:</strong> {googleNow} 
+					{diffGoogle && diffGoogle !== "0.0" && (
+						<span class={isGoogleImproved ? 'improved' : 'declined'}>
+							({isGoogleImproved ? '+' : ''}{diffGoogle})
+						</span>
+					)}
+				</p>
+			)}
+		</div>
+	</div>
+</a>
+
+<style>
+	.restaurant-card {
+		display: block;
+		padding: 1.5em;
+		background: #fff;
+		border-radius: 12px;
+		box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+		text-decoration: none;
+		color: var(--black);
+		transition: transform 0.2s ease, box-shadow 0.2s ease;
+		border: 1px solid #eaeaea;
+	}
+	.restaurant-card:hover {
+		transform: translateY(-4px);
+		box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+	}
+	.card-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 1em;
+		border-bottom: 1px solid #eaeaea;
+		padding-bottom: 0.8em;
+	}
+	.card-header h3 {
+		margin: 0;
+		font-size: 1.4em;
+		color: #222;
+	}
+	.category-badge {
+		background: #f0f0f0;
+		padding: 0.3em 0.8em;
+		border-radius: 20px;
+		font-size: 0.85em;
+		text-transform: uppercase;
+		letter-spacing: 0.5px;
+		color: #555;
+	}
+	.card-body {
+		display: flex;
+		gap: 1.5em;
+		align-items: center;
+	}
+	.score-display {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		min-width: 80px;
+	}
+	.grade {
+		font-size: 2.5em;
+		font-weight: 800;
+		line-height: 1;
+		margin-bottom: 0.1em;
+	}
+	/* Basic grade colors */
+	.grade-Aplus, .grade-A, .grade-Aminus { color: #10b981; }
+	.grade-Bplus, .grade-B, .grade-Bminus { color: #3b82f6; }
+	.grade-C { color: #f59e0b; }
+	.grade-D { color: #ef4444; }
+	.grade-F { color: #7f1d1d; }
+
+	.numeric-score {
+		font-size: 0.9em;
+		color: #666;
+		font-weight: 600;
+	}
+	.details {
+		flex: 1;
+	}
+	.details p {
+		margin: 0.4em 0;
+		font-size: 0.95em;
+		color: #444;
+	}
+	.improved { color: #10b981; font-weight: bold; }
+	.declined { color: #ef4444; font-weight: bold; }
+</style>

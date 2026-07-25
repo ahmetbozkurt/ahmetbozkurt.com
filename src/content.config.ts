@@ -16,4 +16,32 @@ const blog = defineCollection({
 		}),
 });
 
-export const collections = { blog };
+const restaurants = defineCollection({
+	loader: glob({ base: './src/content/restaurants', pattern: '**/*.{md,mdx}' }),
+	schema: () =>
+		z.object({
+			name: z.string(),
+			category: z.enum(['bufe', 'kafe', 'kahvaltici', 'lokanta', 'restoran', 'fast-food', 'fine-dining', 'pastane-tatlici']),
+			visitDate: z.coerce.date(),
+			location: z.string(),
+			pricePerPerson: z.number().optional(),
+			scores: z.object({
+				lezzet: z.number().min(1).max(10),
+				malzeme: z.number().min(1).max(10),
+				porsiyon: z.number().min(1).max(10),
+				servis: z.number().min(1).max(10),
+				ortam: z.number().min(1).max(10),
+				fiyatPerformans: z.number().min(1).max(10),
+			}),
+			comparedTo: z.string().optional(),
+			comparisonResult: z.enum(['daha-iyi', 'daha-kotu', 'esit']).optional(),
+			googleAtVisit: z.number().optional(),
+			googleReviewCountAtVisit: z.number().optional(),
+			googleNow: z.number().optional(),
+			googleReviewCountNow: z.number().optional(),
+			revisit: z.boolean(),
+			notes: z.string().optional(),
+		}),
+});
+
+export const collections = { blog, restaurants };

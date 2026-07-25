@@ -1,0 +1,185 @@
+---
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={`Nasıl Puanlıyorum? - Eats - ${SITE_TITLE}`} description="Restoran incelemeleri ve puanlama metodolojisi" />
+		<style>
+			main {
+				width: 720px;
+				max-width: calc(100% - 2em);
+				margin: 0 auto;
+				padding: 2em 0;
+				color: rgb(var(--gray-dark));
+				line-height: 1.6;
+			}
+			h1 {
+				text-align: center;
+				margin-bottom: 1em;
+				font-size: 2.5em;
+			}
+			h2 {
+				margin-top: 1.5em;
+				margin-bottom: 0.5em;
+				color: #222;
+				border-bottom: 2px solid #eaeaea;
+				padding-bottom: 0.3em;
+			}
+			p {
+				margin-bottom: 1em;
+			}
+			table {
+				width: 100%;
+				border-collapse: collapse;
+				margin-bottom: 1.5em;
+				background: #fff;
+				box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+				border-radius: 8px;
+				overflow: hidden;
+			}
+			th, td {
+				padding: 0.8em 1em;
+				text-align: left;
+				border-bottom: 1px solid #eaeaea;
+			}
+			th {
+				background: #f8f9fa;
+				font-weight: 600;
+				color: #333;
+			}
+			tr:last-child td {
+				border-bottom: none;
+			}
+			.grade-cell {
+				font-weight: 800;
+				font-size: 1.2em;
+			}
+			.grade-Aplus, .grade-A, .grade-Aminus { color: #10b981; }
+			.grade-Bplus, .grade-B, .grade-Bminus { color: #3b82f6; }
+			.grade-C { color: #f59e0b; }
+			.grade-D { color: #ef4444; }
+			.grade-F { color: #7f1d1d; }
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<h1>Puanlama Metodolojisi</h1>
+			
+			<section>
+				<h2>1. Temel Felsefe</h2>
+				<p>
+					Mekanları değerlendirirken tek bir yuvarlak puan verip geçmek yerine, deneyimi farklı boyutlarına ayırıp her birini kendi ağırlığına göre hesaplayan sistematik bir yöntem kullanıyorum. 
+					En önemlisi, farklı konseptlerdeki restoranları (örneğin bir sokak lezzeti ile bir fine-dining restoranını) birbiriyle kıyaslamıyorum. Her mekan, kendi kategorisinin vadettiklerine ve standartlarına göre değerlendiriliyor.
+				</p>
+			</section>
+
+			<section>
+				<h2>2. Değerlendirme Kriterleri ve Ağırlıklar</h2>
+				<p>Puanlamayı iki farklı senaryoya göre ayrı ağırlıklarla yapıyorum:</p>
+				
+				<h3>Mekanda Yeme (Dine-in)</h3>
+				<table>
+					<thead>
+						<tr>
+							<th>Kriter</th>
+							<th>Ağırlık</th>
+							<th>Açıklama</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr><td>Lezzet</td><td>%35</td><td>Yemeğin genel tat profili, baharat dengesi, pişme derecesi.</td></tr>
+						<tr><td>Malzeme</td><td>%15</td><td>Kullanılan et, sebze, yağ vb. malzemelerin kalitesi ve tazeliği.</td></tr>
+						<tr><td>Fiyat/Performans</td><td>%15</td><td>Ödenen hesaba kıyasla alınan doyum ve tatmin seviyesi.</td></tr>
+						<tr><td>Servis</td><td>%15</td><td>Karşılama, hız, personelin ilgisi ve menüye hakimiyeti.</td></tr>
+						<tr><td>Ortam</td><td>%10</td><td>Mekanın temizliği, dekorasyonu, akustik ve genel atmosferi.</td></tr>
+						<tr><td>Porsiyon</td><td>%10</td><td>Miktarın doyuruculuğu ve fiyatıyla orantısı.</td></tr>
+					</tbody>
+				</table>
+
+				<h3>Online Sipariş (Paket Servis)</h3>
+				<table>
+					<thead>
+						<tr>
+							<th>Kriter</th>
+							<th>Ağırlık</th>
+							<th>Açıklama</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr><td>Lezzet</td><td>%30</td><td>Paket serviste lezzet kaybı yaşanıp yaşanmadığı.</td></tr>
+						<tr><td>Paketleme</td><td>%20</td><td>Yemeğin dökülmeyecek, formunu koruyacak şekilde sarılması.</td></tr>
+						<tr><td>Sıcaklık ve Tazelik</td><td>%15</td><td>Ürünlerin olması gereken ısıda ve tazelikte ulaşması.</td></tr>
+						<tr><td>Malzeme</td><td>%15</td><td>Malzeme kalitesinden ödün verilip verilmediği.</td></tr>
+						<tr><td>Fiyat/Performans</td><td>%10</td><td>Ödenen ücretin karşılığı (paket servis fiyat farkları dahil).</td></tr>
+						<tr><td>Teslimat Hızı</td><td>%10</td><td>Söz verilen veya makul sürede teslim edilme durumu.</td></tr>
+					</tbody>
+				</table>
+			</section>
+
+			<section>
+				<h2>3. Harf Notu Skalası</h2>
+				<p>Hesaplanan ağırlıklı puan üzerinden, akademik sisteme benzer şekilde bir harf notu ataması yapıyorum. Bu notlar şu anlama geliyor:</p>
+				<table>
+					<thead>
+						<tr>
+							<th>Harf</th>
+							<th>Puan Aralığı</th>
+							<th>Açıklama</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr><td class="grade-cell grade-Aplus">A+</td><td>9.7 - 10.0</td><td>Kategorisinde kusursuza yakın, referans alınabilecek düzeyde.</td></tr>
+						<tr><td class="grade-cell grade-A">A</td><td>9.3 - 9.6</td><td>Çok üst düzey bir deneyim, ufak tefek kusurlar göz ardı edilebilir.</td></tr>
+						<tr><td class="grade-cell grade-Aminus">A-</td><td>8.8 - 9.2</td><td>Beklentileri fazlasıyla karşılayan, harika bir alternatif.</td></tr>
+						<tr><td class="grade-cell grade-Bplus">B+</td><td>8.3 - 8.7</td><td>Ortalamanın net bir şekilde üzerinde, iyi ve tatmin edici.</td></tr>
+						<tr><td class="grade-cell grade-B">B</td><td>7.7 - 8.2</td><td>Standartları karşılayan, güvenli ve başarılı bir seçenek.</td></tr>
+						<tr><td class="grade-cell grade-Bminus">B-</td><td>7.0 - 7.6</td><td>Yeterli düzeyde ancak geliştirilmesi gereken noktaları mevcut.</td></tr>
+						<tr><td class="grade-cell grade-C">C</td><td>6.0 - 6.9</td><td>Ortalamanın biraz altında, idare eder ancak ilk tercihim olmaz.</td></tr>
+						<tr><td class="grade-cell grade-D">D</td><td>4.0 - 5.9</td><td>Beklentileri karşılamayan, ciddi pürüzleri olan zayıf bir deneyim.</td></tr>
+						<tr><td class="grade-cell grade-F">F</td><td>0 - 3.9</td><td>Kesinlikle tavsiye etmeyeceğim, başarısız puan.</td></tr>
+					</tbody>
+				</table>
+			</section>
+
+			<section>
+				<h2>4. Kategori Sistemi (Mekan Tipi ve Formatı)</h2>
+				<p>
+					Eskiden fiyat odaklı bir ayrım yaparken, artık mekanları <strong>format ve vadettikleri deneyim tipine göre</strong> 8 ayrı kategoriye ayırıyorum (Büfe/Sokak, Kafe, Kahvaltıcı, Lokanta, Restoran, Fast-Food, Fine-Dining, Pastane/Tatlıcı).
+				</p>
+				<p>
+					Bunun temel sebebi, ayaküstü hızlıca döner yediğiniz bir büfe ile, garsonun şarap menüsüyle geldiği bir restoranı aynı potada eritmeme gerekliliğidir. Bir büfedeki "Ortam" beklentisi sadece temizlikten ibaretken, bir restoranda ambiyans, müzik ve ışıklandırma da puanlamaya dahil olur.
+				</p>
+				<p>
+					Bu sebeple puanlamalar <strong>sadece kendi mekan tipindeki (kategorisindeki) diğer işletmelerle</strong> karşılaştırmalı olarak anlam ifade eder. Bir büfenin "Servis %15" puanı ile Fine-Dining bir mekanın "Servis %15" puanı için beklenti çıtası birbirinden tamamen farklıdır.
+				</p>
+			</section>
+
+			<section>
+				<h2>5. Karşılaştırmalı Kalibrasyon (Dinamik Puanlama)</h2>
+				<p>
+					Mekanlara verdiğim puanlar zamanla esneyebilir. Yeni bir mekana puan verirken daima o kategoride daha önce en yüksek puanı alan mekanla zihnimde bir kalibrasyon yapıyorum.
+				</p>
+				<p>
+					<em>Örneğin:</em> X mekanına hayatımda yediğim en iyi döner diyerek 9.4 vermiş olabilirim. Ancak aylar sonra keşfettiğim Y mekanı ondan çok daha iyiyse ve Y mekanına 9.6 veriyorsam, geçmişe dönüp X mekanının puanını kalibre ederek 9.2'ye çekebilirim. Tavan her zaman yeni "en iyiler" ile belirlenir.
+				</p>
+			</section>
+
+			<section>
+				<h2>6. Google Puanı Takibi</h2>
+				<p>
+					Restoran incelemelerimde, benim mekanı ziyaret ettiğim günkü Google puanı ve yorum sayısı ile <strong>güncel</strong> Google puanını yan yana görebilirsiniz.
+				</p>
+				<p>
+					Amacım, zaman içerisinde mekanın kalitesindeki yükselişi veya genel bir bozma trendini (hype sonrası düşüşleri) hem kendi deneyimimle hem de kitlelerin kararıyla doğrulayabilmektir.
+				</p>
+			</section>
+		</main>
+		<Footer />
+	</body>
+</html>

@@ -1,0 +1,188 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import Analytics from '@vercel/analytics/astro';
+import { calculateOverall, toLetterGrade } from '../utils/scoring';
+
+type Props = CollectionEntry<'restaurants'>['data'];
+
+const {
+	name, category, visitDate, location, pricePerPerson,
+	scores, comparedTo, comparisonResult,
+	googleAtVisit, googleReviewCountAtVisit,
+	googleNow, googleReviewCountNow, revisit, notes
+} = Astro.props;
+
+const overallScore = calculateOverall(scores);
+const grade = toLetterGrade(overallScore);
+---
+
+<html lang="en">
+	<head>
+		<BaseHead title={`${name} - Eats Review`} description={`Review of ${name} (${category})`} />
+		<style>
+			main {
+				width: calc(100% - 2em);
+				max-width: 100%;
+				margin: 0;
+			}
+			.prose {
+				width: 720px;
+				max-width: calc(100% - 2em);
+				margin: auto;
+				padding: 1em;
+				color: rgb(var(--gray-dark));
+			}
+			.restaurant-header {
+				margin-bottom: 2em;
+				padding: 2em;
+				background: #f8f9fa;
+				border-radius: 12px;
+				border: 1px solid #eaeaea;
+				text-align: center;
+			}
+			.restaurant-header h1 {
+				margin: 0 0 0.2em 0;
+				font-size: 2.5em;
+			}
+			.meta {
+				display: flex;
+				justify-content: center;
+				gap: 1em;
+				color: #555;
+				margin-bottom: 1.5em;
+			}
+			.meta span {
+				background: #e9ecef;
+				padding: 0.3em 0.8em;
+				border-radius: 20px;
+				font-size: 0.9em;
+			}
+			.score-board {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				background: white;
+				padding: 1.5em;
+				border-radius: 8px;
+				box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+			}
+			.main-score {
+				text-align: center;
+				padding-right: 2em;
+				border-right: 1px solid #eaeaea;
+			}
+			.main-score .grade {
+				font-size: 4em;
+				font-weight: 800;
+				line-height: 1;
+				color: #222;
+			}
+			.main-score .numeric {
+				font-size: 1.2em;
+				color: #666;
+			}
+			.sub-scores {
+				flex: 1;
+				display: grid;
+				grid-template-columns: repeat(3, 1fr);
+				gap: 1em;
+				padding-left: 2em;
+			}
+			.sub-score {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+			}
+			.sub-score strong {
+				font-size: 1.2em;
+				color: #333;
+			}
+			.sub-score span {
+				font-size: 0.8em;
+				text-transform: uppercase;
+				color: #777;
+			}
+			.extra-details {
+				margin-top: 2em;
+				padding: 1.5em;
+				background: #fff;
+				border: 1px solid #eaeaea;
+				border-radius: 8px;
+			}
+			.extra-details h3 {
+				margin-top: 0;
+			}
+            
+            @media (max-width: 600px) {
+                .score-board {
+                    flex-direction: column;
+                    gap: 1em;
+                }
+                .main-score {
+                    border-right: none;
+                    border-bottom: 1px solid #eaeaea;
+                    padding-right: 0;
+                    padding-bottom: 1em;
+                }
+                .sub-scores {
+                    padding-left: 0;
+                }
+            }
+		</style>
+	</head>
+
+	<body>
+		<Header />
+		<main>
+			<article>
+				<div class="prose">
+					<div class="restaurant-header">
+						<h1>{name}</h1>
+						<div class="meta">
+							<span>{category}</span>
+							<span>📍 {location}</span>
+							<span>📅 <FormattedDate date={visitDate} /></span>
+						</div>
+						
+						<div class="score-board">
+							<div class="main-score">
+								<div class="grade">{grade}</div>
+								<div class="numeric">{overallScore} / 10</div>
+							</div>
+							<div class="sub-scores">
+								<div class="sub-score"><strong>{scores.lezzet}</strong><span>Lezzet</span></div>
+								<div class="sub-score"><strong>{scores.malzeme}</strong><span>Malz</span></div>
+								<div class="sub-score"><strong>{scores.porsiyon}</strong><span>Pors</span></div>
+								<div class="sub-score"><strong>{scores.servis}</strong><span>Servis</span></div>
+								<div class="sub-score"><strong>{scores.ortam}</strong><span>Ortam</span></div>
+								<div class="sub-score"><strong>{scores.fiyatPerformans}</strong><span>F/P</span></div>
+							</div>
+						</div>
+					</div>
+
+					<div class="review-content">
+						<slot />
+					</div>
+
+					<div class="extra-details">
+						<h3>Ekstra Detaylar</h3>
+						<ul>
+							{pricePerPerson && <li><strong>Kişi Başı Ortalama:</strong> {pricePerPerson} ₺</li>}
+							{googleAtVisit && <li><strong>Google Puanı (Ziyaret):</strong> {googleAtVisit} {googleReviewCountAtVisit ? `(${googleReviewCountAtVisit} yorum)` : ''}</li>}
+							{googleNow && <li><strong>Google Puanı (Güncel):</strong> {googleNow} {googleReviewCountNow ? `(${googleReviewCountNow} yorum)` : ''}</li>}
+							<li><strong>Tekrar Gidilir mi?</strong> {revisit ? 'Evet ✅' : 'Hayır ❌'}</li>
+							{comparedTo && <li><strong>Karşılaştırma:</strong> {comparedTo} ile {comparisonResult}</li>}
+						</ul>
+						{notes && <p><strong>Notlar:</strong> {notes}</p>}
+					</div>
+				</div>
+			</article>
+		</main>
+		<Footer />
+		<Analytics />
+	</body>
+</html>

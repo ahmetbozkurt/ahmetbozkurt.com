@@ -1,0 +1,127 @@
+---
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
+import { getCollection } from 'astro:content';
+import RestaurantCard from '../../components/RestaurantCard.astro';
+import { calculateOverall } from '../../utils/scoring';
+
+const restaurants = (await getCollection('restaurants')).sort((a, b) => {
+	// Sort by overall score descending
+	return calculateOverall(b.data.scores) - calculateOverall(a.data.scores);
+});
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={`Eats - ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
+		<style>
+			main {
+				width: 960px;
+				max-width: calc(100% - 2em);
+				margin: 0 auto;
+				padding: 2em 0;
+			}
+			.header-section {
+				text-align: center;
+				margin-bottom: 2em;
+			}
+			.filter-bar {
+				display: flex;
+				justify-content: center;
+				gap: 1em;
+				margin-bottom: 3em;
+				flex-wrap: wrap;
+			}
+			.filter-btn {
+				background: #f0f0f0;
+				border: none;
+				padding: 0.5em 1em;
+				border-radius: 20px;
+				cursor: pointer;
+				font-size: 0.9em;
+				transition: background 0.2s;
+			}
+			.filter-btn.active {
+				background: var(--accent);
+				color: white;
+			}
+			.methodology-link {
+				display: inline-block;
+				margin-top: 0.8em;
+				font-size: 0.95em;
+				color: var(--accent);
+				text-decoration: none;
+				border-bottom: 1px solid transparent;
+				transition: border-bottom-color 0.2s;
+			}
+			.methodology-link:hover {
+				border-bottom-color: var(--accent);
+			}
+			.restaurant-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+				gap: 2em;
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<div class="header-section">
+				<h1>Yediğim, İçtiğim, Puanladığım Yerler</h1>
+				<p>Tamamen kişisel puanlamalarımdır. Kategorilere göre filtreleyebilirsiniz.</p>
+				<a href="/eats/nasil-puanliyorum" class="methodology-link">Nasıl Puanlıyorum? ℹ️</a>
+			</div>
+
+			<div class="filter-bar">
+				<button class="filter-btn active" data-category="all">Tümü</button>
+				<button class="filter-btn" data-category="bufe">🌯 Büfe/Sokak</button>
+				<button class="filter-btn" data-category="kafe">☕ Kafe</button>
+				<button class="filter-btn" data-category="kahvaltici">🍳 Kahvaltıcı</button>
+				<button class="filter-btn" data-category="lokanta">🍲 Lokanta</button>
+				<button class="filter-btn" data-category="restoran">🍽️ Restoran</button>
+				<button class="filter-btn" data-category="fast-food">🍔 Fast-Food</button>
+				<button class="filter-btn" data-category="fine-dining">🥂 Fine-Dining</button>
+				<button class="filter-btn" data-category="pastane-tatlici">🍰 Pastane</button>
+			</div>
+
+			<div class="restaurant-grid">
+				{
+					restaurants.map((restaurant) => (
+						<div class="card-wrapper" data-category={restaurant.data.category}>
+							<RestaurantCard restaurant={restaurant} />
+						</div>
+					))
+				}
+			</div>
+		</main>
+		<Footer />
+
+		<script>
+			// Client-side filtering
+			const buttons = document.querySelectorAll('.filter-btn');
+			const cards = document.querySelectorAll('.card-wrapper');
+
+			buttons.forEach(btn => {
+				btn.addEventListener('click', () => {
+					// Update active state
+					buttons.forEach(b => b.classList.remove('active'));
+					btn.classList.add('active');
+
+					const category = btn.getAttribute('data-category');
+					
+					cards.forEach(card => {
+						if (category === 'all' || card.getAttribute('data-category') === category) {
+							(card as HTMLElement).style.display = 'block';
+						} else {
+							(card as HTMLElement).style.display = 'none';
+						}
+					});
+				});
+			});
+		</script>
+	</body>
+</html>
