@@ -8,7 +8,7 @@ interface Props {
 
 const { restaurant } = Astro.props;
 const { data, id } = restaurant;
-const { name, category, location, scores } = data;
+const { name, category, location, visitDate, scores } = data;
 
 const overallScore = calculateOverall(scores);
 const grade = toLetterGrade(overallScore);
@@ -20,68 +20,126 @@ const categoryMap: Record<string, string> = {
 };
 const catLabel = categoryMap[category] || category;
 
-const fillCount = Math.round(overallScore);
-const progress = '■'.repeat(fillCount) + '□'.repeat(10 - fillCount);
+const formattedDate = visitDate.toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+// Determine rotation between -2deg and +2deg
+const rotation = Math.random() * 4 - 2;
 ---
 
-<a href={`/eats/${id}/`} class="card">
+<a href={`/eats/${id}/`} class="card" style={`transform: rotate(${rotation}deg);`}>
+	<div class="stamp">
+		<span class="stamp-grade">{grade}</span>
+	</div>
+	
 	<div class="card-content">
-		<h3 class="title">{name} <span class="grade">({grade})</span></h3>
-		<p class="meta">{catLabel} &mdash; {location}</p>
+		<h3 class="restaurant-name">{name}</h3>
+		<p class="meta-line">{catLabel} &mdash; {location}</p>
 		
-		<div class="score-line">
-			<span class="bar">{progress}</span>
-			<span class="num">{overallScore}/10</span>
+		<div class="scores-summary">
+			<div class="score-row">
+				<span class="score-label">Lezzet</span>
+				<div class="score-dots"></div>
+				<span class="score-val">{scores.lezzet}/10</span>
+			</div>
+			<div class="score-row">
+				<span class="score-label">Fiyat/Perf</span>
+				<div class="score-dots"></div>
+				<span class="score-val">{scores.fiyatPerformans}/10</span>
+			</div>
 		</div>
 	</div>
 </a>
 
 <style>
+	@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+
 	.card {
+		--paper: #F2E8D5;
+		--ink: #2B2620;
+		--stamp: #A33027;
+		--perforation: #D8CFBC;
+		
 		display: block;
-		padding: 1.5em 0;
+		background-color: var(--paper);
+		color: var(--ink);
+		font-family: 'Space Mono', monospace;
+		padding: 1.5em;
 		text-decoration: none;
-		color: var(--black);
-		border-bottom: 1px solid rgba(var(--gray-light), 0.8);
-		transition: transform 0.2s ease, opacity 0.2s ease;
+		box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+		position: relative;
+		clip-path: polygon(
+			0% 3px, 5% 0px, 10% 3px, 15% 0px, 20% 3px, 25% 0px, 30% 3px, 35% 0px, 40% 3px, 45% 0px, 50% 3px, 55% 0px, 60% 3px, 65% 0px, 70% 3px, 75% 0px, 80% 3px, 85% 0px, 90% 3px, 95% 0px, 100% 3px,
+			100% calc(100% - 3px), 95% 100%, 90% calc(100% - 3px), 85% 100%, 80% calc(100% - 3px), 75% 100%, 70% calc(100% - 3px), 65% 100%, 60% calc(100% - 3px), 55% 100%, 50% calc(100% - 3px), 45% 100%, 40% calc(100% - 3px), 35% 100%, 30% calc(100% - 3px), 25% 100%, 20% calc(100% - 3px), 15% 100%, 10% calc(100% - 3px), 5% 100%, 0% calc(100% - 3px)
+		);
+		transition: transform 0.2s ease, box-shadow 0.2s ease;
+		background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
 	}
+	
 	.card:hover {
-		opacity: 0.7;
-		transform: translateX(4px);
+		box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+		z-index: 2;
 	}
-	.title {
-		font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-		margin: 0 0 0.2em 0;
-		font-size: 1.6em;
-		color: rgb(var(--black));
-		display: flex;
-		align-items: baseline;
-		gap: 0.3em;
-	}
-	.grade {
-		font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-		font-style: italic;
-		color: #ff5a36;
-		font-size: 0.8em;
-		font-weight: 400;
-	}
-	.meta {
-		font-size: 0.9em;
-		color: rgb(var(--gray));
-		margin: 0 0 1em 0;
-	}
-	.score-line {
+
+	.stamp {
+		position: absolute;
+		top: 10px;
+		right: 10px;
+		width: 45px;
+		height: 45px;
+		border: 2px solid var(--stamp);
+		border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+		color: var(--stamp);
 		display: flex;
 		align-items: center;
-		gap: 0.8em;
-		font-size: 0.85em;
-		color: #ff5a36;
+		justify-content: center;
+		transform: rotate(-12deg);
+		opacity: 0.9;
+		filter: drop-shadow(1px 1px 0px rgba(163, 48, 39, 0.2));
 	}
-	.bar {
-		letter-spacing: 1px;
+	.stamp-grade {
+		font-size: 1.4em;
+		font-weight: 700;
 	}
-	.num {
-		font-weight: bold;
-		color: rgb(var(--gray-dark));
+
+	.restaurant-name {
+		font-size: 1.2em;
+		font-weight: 700;
+		margin: 0 0 0.2em 0;
+		text-transform: uppercase;
+		line-height: 1.2;
+		padding-right: 40px; /* leave space for stamp */
+	}
+	.meta-line {
+		color: #8A8375; /* ink-muted */
+		font-size: 0.75em;
+		margin: 0 0 1em 0;
+		border-bottom: 1px dashed var(--perforation);
+		padding-bottom: 0.8em;
+	}
+
+	.scores-summary {
+		margin-top: 1em;
+	}
+	.score-row {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		margin-bottom: 0.4em;
+		font-size: 0.8em;
+	}
+	.score-label {
+		text-transform: uppercase;
+		font-weight: 700;
+	}
+	.score-dots {
+		flex: 1;
+		border-bottom: 2px dotted var(--ink);
+		margin: 0 6px;
+		opacity: 0.5;
+		position: relative;
+		top: -4px;
+	}
+	.score-val {
+		font-weight: 700;
 	}
 </style>

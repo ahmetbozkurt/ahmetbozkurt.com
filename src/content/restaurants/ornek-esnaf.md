@@ -17,6 +17,11 @@ googleNow: 4.5
 googleReviewCountNow: 1300
 revisit: true
 notes: "Kuru fasulyesi ve pilavı efsane, ancak öğlen çok kalabalık oluyor."
+photos:
+  - "../../assets/eats-photos/1.png"
+  - "../../assets/eats-photos/2.png"
+  - "../../assets/eats-photos/3.png"
+  - "../../assets/eats-photos/4.png"
 ---
 
 Karaköy'ün ara sokaklarında yıllara meydan okuyan bu esnaf lokantası, özellikle kuru fasulye ve kavurmasıyla meşhur.

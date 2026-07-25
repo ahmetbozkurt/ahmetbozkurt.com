@@ -1,9 +1,9 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
-import FormattedDate from '../components/FormattedDate.astro';
 import Analytics from '@vercel/analytics/astro';
 import { calculateOverall, toLetterGrade } from '../utils/scoring';
 
@@ -13,7 +13,7 @@ const {
 	name, category, visitDate, location, pricePerPerson,
 	scores, comparedTo, comparisonResult,
 	googleAtVisit, googleReviewCountAtVisit,
-	googleNow, googleReviewCountNow, revisit, notes
+	googleNow, googleReviewCountNow, revisit, notes, photos
 } = Astro.props;
 
 const overallScore = calculateOverall(scores);
@@ -26,141 +26,232 @@ const categoryMap: Record<string, string> = {
 };
 const catLabel = categoryMap[category] || category;
 
-function getBar(val: number) {
-	const f = Math.round(val);
-	return '■'.repeat(f) + '□'.repeat(10 - f);
-}
-
 const diffGoogle = (googleNow && googleAtVisit) ? (googleNow - googleAtVisit).toFixed(1) : null;
 const isGoogleImproved = diffGoogle ? parseFloat(diffGoogle) > 0 : false;
+
+// Format date nicely
+const formattedDate = visitDate.toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric' });
 ---
 
 <html lang="en">
 	<head>
 		<BaseHead title={`${name} - Eats Review`} description={`Review of ${name} (${category})`} />
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 		<style>
 			:root {
-				--eats-accent: #ff5a36;
-				--eats-accent-light: #ffe8e3;
-			}
-			main {
-				width: 720px;
-				max-width: calc(100% - 2em);
-				margin: 0 auto;
-				padding: 2em 0;
-			}
-			.review-header {
-				margin-bottom: 3em;
-				border-bottom: 2px solid var(--eats-accent-light);
-				padding-bottom: 2em;
-			}
-			.title-wrap {
-				display: flex;
-				align-items: baseline;
-				gap: 0.5em;
-				margin-bottom: 0.5em;
-				flex-wrap: wrap;
-			}
-			.restaurant-name {
-				font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-				font-size: 3em;
-				margin: 0;
-				color: rgb(var(--black));
-				line-height: 1.1;
-			}
-			.restaurant-grade {
-				font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-				font-size: 2em;
-				font-style: italic;
-				color: var(--eats-accent);
-				font-weight: 400;
-			}
-			.meta-line {
-				font-size: 0.95em;
-				color: rgb(var(--gray));
-				margin: 0 0 2em 0;
+				--paper: #F2E8D5;
+				--ink: #2B2620;
+				--stamp: #A33027;
+				--ink-muted: #8A8375;
+				--perforation: #D8CFBC;
+				--stamp-success: #4C7A5E;
 			}
 			
-			/* Profile */
-			.taste-profile {
-				margin: 2em 0;
+			body {
+				background-color: #e5e5e5;
 			}
-			.taste-profile h3 {
-				font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-				font-size: 1.2em;
+
+			main {
+				max-width: 100%;
+				margin: 0 auto;
+				padding: 3em 1em;
+			}
+
+			.receipt {
+				width: 100%;
+				max-width: 420px;
+				margin: 0 auto;
+				background-color: var(--paper);
+				color: var(--ink);
+				font-family: 'Space Mono', monospace;
+				box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+				position: relative;
+				/* Jagged top/bottom edges */
+				clip-path: polygon(
+					0% 5px, 2% 0px, 4% 5px, 6% 0px, 8% 5px, 10% 0px, 12% 5px, 14% 0px, 16% 5px, 18% 0px, 20% 5px, 22% 0px, 24% 5px, 26% 0px, 28% 5px, 30% 0px, 32% 5px, 34% 0px, 36% 5px, 38% 0px, 40% 5px, 42% 0px, 44% 5px, 46% 0px, 48% 5px, 50% 0px, 52% 5px, 54% 0px, 56% 5px, 58% 0px, 60% 5px, 62% 0px, 64% 5px, 66% 0px, 68% 5px, 70% 0px, 72% 5px, 74% 0px, 76% 5px, 78% 0px, 80% 5px, 82% 0px, 84% 5px, 86% 0px, 88% 5px, 90% 0px, 92% 5px, 94% 0px, 96% 5px, 98% 0px, 100% 5px,
+					100% calc(100% - 5px), 98% 100%, 96% calc(100% - 5px), 94% 100%, 92% calc(100% - 5px), 90% 100%, 88% calc(100% - 5px), 86% 100%, 84% calc(100% - 5px), 82% 100%, 80% calc(100% - 5px), 78% 100%, 76% calc(100% - 5px), 74% 100%, 72% calc(100% - 5px), 70% 100%, 68% calc(100% - 5px), 66% 100%, 64% calc(100% - 5px), 62% 100%, 60% calc(100% - 5px), 58% 100%, 56% calc(100% - 5px), 54% 100%, 52% calc(100% - 5px), 50% 100%, 48% calc(100% - 5px), 46% 100%, 44% calc(100% - 5px), 42% 100%, 40% calc(100% - 5px), 38% 100%, 36% calc(100% - 5px), 34% 100%, 32% calc(100% - 5px), 30% 100%, 28% calc(100% - 5px), 26% 100%, 24% calc(100% - 5px), 22% 100%, 20% calc(100% - 5px), 18% 100%, 16% calc(100% - 5px), 14% 100%, 12% calc(100% - 5px), 10% 100%, 8% calc(100% - 5px), 6% 100%, 4% calc(100% - 5px), 2% 100%, 0% calc(100% - 5px)
+				);
+				padding: 2.5em 1.5em;
+				/* Slight texture */
+				background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+			}
+
+			.receipt-header {
+				text-align: center;
+				margin-bottom: 1.5em;
+				border-bottom: 2px dashed var(--perforation);
+				padding-bottom: 1.5em;
+			}
+			.restaurant-name {
+				font-size: 1.8em;
+				font-weight: 700;
+				margin: 0 0 0.2em 0;
 				text-transform: uppercase;
-				letter-spacing: 2px;
-				color: rgb(var(--gray));
-				margin-bottom: 1em;
-				font-weight: 400;
+				line-height: 1.1;
+			}
+			.meta-line {
+				color: var(--ink-muted);
+				font-size: 0.85em;
+				margin: 0;
+			}
+
+			.stamp {
+				position: absolute;
+				top: 15px;
+				right: 15px;
+				width: 70px;
+				height: 70px;
+				border: 3px solid var(--stamp);
+				border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+				color: var(--stamp);
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				transform: rotate(-8deg);
+				opacity: 0.9;
+				pointer-events: none;
+				/* Add a slight blur/distortion to look like stamped ink */
+				filter: drop-shadow(1px 1px 0px rgba(163, 48, 39, 0.2));
+			}
+			.stamp .stamp-grade {
+				font-size: 2em;
+				font-weight: 700;
+				line-height: 1;
+				font-family: 'Space Mono', monospace;
+			}
+			.stamp .stamp-num {
+				font-size: 0.6em;
+				font-weight: 700;
+				margin-top: 2px;
+			}
+
+			.scores-list {
+				margin: 1.5em 0;
 			}
 			.score-row {
 				display: flex;
-				align-items: center;
-				margin-bottom: 0.5em;
-				font-size: 0.95em;
+				justify-content: space-between;
+				align-items: baseline;
+				margin-bottom: 0.6em;
+				font-size: 0.9em;
 			}
 			.score-label {
-				width: 140px;
-				color: rgb(var(--black));
+				text-transform: uppercase;
+				letter-spacing: 0.05em;
+				font-weight: 700;
 			}
-			.score-label.primary {
-				font-weight: bold;
-				font-size: 1.1em;
-			}
-			.score-bar {
+			.score-dots {
 				flex: 1;
-				color: var(--eats-accent);
-				letter-spacing: 2px;
-				font-family: monospace;
+				border-bottom: 2px dotted var(--ink);
+				margin: 0 8px;
+				opacity: 0.5;
+				position: relative;
+				top: -4px;
 			}
-			.score-num {
-				width: 40px;
+			.score-val {
+				font-weight: 700;
+			}
+
+			.receipt-footer {
+				border-top: 2px dashed var(--perforation);
+				padding-top: 1em;
+				margin-top: 1.5em;
+			}
+			.footer-row {
+				display: flex;
+				justify-content: space-between;
+				align-items: baseline;
+				margin-bottom: 0.5em;
+				font-size: 0.9em;
+			}
+			.footer-label {
+				text-transform: uppercase;
+			}
+			.footer-val {
 				text-align: right;
-				font-weight: bold;
-				color: rgb(var(--gray-dark));
+				font-weight: 700;
+			}
+			.val-success {
+				color: var(--stamp-success);
+			}
+			.val-muted {
+				color: var(--ink-muted);
 			}
 
 			.review-content {
-				font-size: 1.1em;
-				line-height: 1.8;
-				color: rgb(var(--gray-dark));
-				margin-bottom: 3em;
+				font-family: 'Lora', serif;
+				font-size: 1.05em;
+				line-height: 1.6;
+				margin-top: 2em;
+				border-top: 1px solid var(--perforation);
+				padding-top: 1.5em;
+			}
+			.review-content p {
+				margin-bottom: 1em;
 			}
 
-			.inline-details {
-				border-top: 1px solid #eaeaea;
-				padding-top: 2em;
-				font-size: 0.9em;
-				color: rgb(var(--gray-dark));
-			}
-			.inline-details ul {
-				list-style-type: none;
-				padding: 0;
-				margin: 0;
+			/* Photo Gallery */
+			.gallery {
 				display: grid;
-				grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-				gap: 1em;
+				grid-template-columns: repeat(2, 1fr);
+				gap: 8px;
+				margin-top: 2em;
 			}
-			.inline-details li {
-				margin-bottom: 0.5em;
+			.gallery img {
+				width: 100%;
+				height: 150px;
+				object-fit: cover;
+				cursor: pointer;
+				border-radius: 4px;
+				filter: sepia(0.2) contrast(0.9); /* slight vintage feel */
+				transition: filter 0.2s;
 			}
-			.inline-details strong {
-				color: rgb(var(--black));
-				font-weight: 600;
+			.gallery img:hover {
+				filter: none;
 			}
-			.google-trend.up { color: #10b981; }
-			.google-trend.down { color: #ef4444; }
-			
-			@media (max-width: 600px) {
-				.score-row {
-					flex-direction: column;
-					align-items: flex-start;
-					margin-bottom: 1em;
-				}
-				.score-num {
-					display: none;
-				}
+
+			/* Lightbox */
+			dialog {
+				padding: 0;
+				border: none;
+				background: rgba(0, 0, 0, 0.9);
+				width: 100vw;
+				height: 100vh;
+				max-width: 100vw;
+				max-height: 100vh;
+				position: fixed;
+				top: 0;
+				left: 0;
+			}
+			dialog::backdrop {
+				background: rgba(0, 0, 0, 0.9);
+			}
+			.lightbox-content {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				height: 100%;
+				width: 100%;
+				position: relative;
+			}
+			.lightbox-img {
+				max-width: 90%;
+				max-height: 90vh;
+				object-fit: contain;
+			}
+			.close-btn {
+				position: absolute;
+				top: 20px;
+				right: 30px;
+				background: none;
+				border: none;
+				color: white;
+				font-size: 2em;
+				cursor: pointer;
+				font-family: monospace;
 			}
 		</style>
 	</head>
@@ -168,52 +259,122 @@ const isGoogleImproved = diffGoogle ? parseFloat(diffGoogle) > 0 : false;
 	<body>
 		<Header />
 		<main>
-			<article>
-				<div class="review-header">
-					<div class="title-wrap">
-						<h1 class="restaurant-name">{name}</h1>
-						<span class="restaurant-grade">{grade}</span>
-					</div>
-					<p class="meta-line">
-						{catLabel} &nbsp;&mdash;&nbsp; 📍 {location} &nbsp;&mdash;&nbsp; 📅 Ziyaret: <FormattedDate date={visitDate} />
-					</p>
+			<article class="receipt">
+				<div class="stamp">
+					<span class="stamp-grade">{grade}</span>
+					<span class="stamp-num">{overallScore}/10</span>
+				</div>
 
-					<div class="taste-profile">
-						<h3>Lezzet Profili</h3>
-						<div class="score-row"><div class="score-label primary">Lezzet (%35)</div><div class="score-bar">{getBar(scores.lezzet)}</div><div class="score-num">{scores.lezzet}</div></div>
-						<div class="score-row"><div class="score-label">Malzeme (%15)</div><div class="score-bar">{getBar(scores.malzeme)}</div><div class="score-num">{scores.malzeme}</div></div>
-						<div class="score-row"><div class="score-label">Servis (%15)</div><div class="score-bar">{getBar(scores.servis)}</div><div class="score-num">{scores.servis}</div></div>
-						<div class="score-row"><div class="score-label">Fiyat/Perf. (%15)</div><div class="score-bar">{getBar(scores.fiyatPerformans)}</div><div class="score-num">{scores.fiyatPerformans}</div></div>
-						<div class="score-row"><div class="score-label">Ortam (%10)</div><div class="score-bar">{getBar(scores.ortam)}</div><div class="score-num">{scores.ortam}</div></div>
-						<div class="score-row"><div class="score-label">Porsiyon (%10)</div><div class="score-bar">{getBar(scores.porsiyon)}</div><div class="score-num">{scores.porsiyon}</div></div>
+				<div class="receipt-header">
+					<h1 class="restaurant-name">{name}</h1>
+					<p class="meta-line">{catLabel} &mdash; {location} &mdash; {formattedDate}</p>
+				</div>
+
+				<div class="scores-list">
+					<div class="score-row">
+						<span class="score-label">Lezzet (%35)</span>
+						<div class="score-dots"></div>
+						<span class="score-val">{scores.lezzet}/10</span>
+					</div>
+					<div class="score-row">
+						<span class="score-label">Malzeme (%15)</span>
+						<div class="score-dots"></div>
+						<span class="score-val">{scores.malzeme}/10</span>
+					</div>
+					<div class="score-row">
+						<span class="score-label">Servis (%15)</span>
+						<div class="score-dots"></div>
+						<span class="score-val">{scores.servis}/10</span>
+					</div>
+					<div class="score-row">
+						<span class="score-label">Fiyat/Perf. (%15)</span>
+						<div class="score-dots"></div>
+						<span class="score-val">{scores.fiyatPerformans}/10</span>
+					</div>
+					<div class="score-row">
+						<span class="score-label">Ortam (%10)</span>
+						<div class="score-dots"></div>
+						<span class="score-val">{scores.ortam}/10</span>
+					</div>
+					<div class="score-row">
+						<span class="score-label">Porsiyon (%10)</span>
+						<div class="score-dots"></div>
+						<span class="score-val">{scores.porsiyon}/10</span>
 					</div>
 				</div>
 
-				<div class="review-content prose">
-					<slot />
-				</div>
-
-				<div class="inline-details">
-					<ul>
-						{pricePerPerson && <li><strong>Hesap:</strong> ~{pricePerPerson} ₺ / Kişi</li>}
-						<li><strong>Tekrar Gidilir mi?:</strong> {revisit ? 'Kesinlikle' : 'Pek sanmıyorum'}</li>
-						{googleNow && 
-							<li>
-								<strong>Google Puanı:</strong> {googleAtVisit} ➔ {googleNow} 
+				<div class="receipt-footer">
+					{pricePerPerson && (
+						<div class="footer-row">
+							<span class="footer-label">FİYAT</span>
+							<span class="footer-val">{pricePerPerson} ₺ / kişi</span>
+						</div>
+					)}
+					<div class="footer-row">
+						<span class="footer-label">TEKRAR GİDİLİR Mİ</span>
+						<span class={`footer-val ${revisit ? 'val-success' : 'val-muted'}`}>{revisit ? 'EVET ✓' : 'HAYIR'}</span>
+					</div>
+					{googleNow && (
+						<div class="footer-row">
+							<span class="footer-label">GOOGLE PUANI</span>
+							<span class="footer-val">
+								{googleAtVisit} ➔ {googleNow}
 								{diffGoogle && diffGoogle !== "0.0" && (
-									<span class={`google-trend ${isGoogleImproved ? 'up' : 'down'}`}>
+									<span style="font-size:0.85em; margin-left: 4px;" class={isGoogleImproved ? 'val-success' : 'val-muted'}>
 										({isGoogleImproved ? '+' : ''}{diffGoogle})
 									</span>
 								)}
-							</li>
-						}
-						{comparedTo && <li><strong>Kıyasla:</strong> {comparedTo} ({comparisonResult})</li>}
-					</ul>
-					{notes && <p style="margin-top: 1.5em; font-style: italic;"><strong>Notlar:</strong> {notes}</p>}
+							</span>
+						</div>
+					)}
 				</div>
+
+				<div class="review-content">
+					<slot />
+					{notes && <p style="font-style: italic;"><strong>Not:</strong> {notes}</p>}
+				</div>
+
+				{photos && photos.length > 0 && (
+					<div class="gallery">
+						{photos.map((src, index) => (
+							<img src={src} alt={`${name} fotoğraf ${index + 1}`} class="gallery-thumb" data-src={src} />
+						))}
+					</div>
+				)}
 			</article>
 		</main>
 		<Footer />
 		<Analytics />
+
+		<dialog id="lightbox">
+			<div class="lightbox-content">
+				<button class="close-btn" id="closeLightbox">×</button>
+				<img src="" alt="Tam Ekran Görüntü" class="lightbox-img" id="lightboxImg" />
+			</div>
+		</dialog>
+
+		<script>
+			const dialog = document.getElementById('lightbox') as HTMLDialogElement;
+			const img = document.getElementById('lightboxImg') as HTMLImageElement;
+			const closeBtn = document.getElementById('closeLightbox');
+			
+			document.querySelectorAll('.gallery-thumb').forEach((thumb) => {
+				thumb.addEventListener('click', (e) => {
+					const src = (e.target as HTMLImageElement).getAttribute('data-src');
+					if (src) {
+						img.src = src;
+						dialog.showModal();
+					}
+				});
+			});
+
+			closeBtn?.addEventListener('click', () => {
+				dialog.close();
+			});
+
+			dialog?.addEventListener('click', (e) => {
+				if (e.target === dialog) dialog.close();
+			});
+		</script>
 	</body>
 </html>

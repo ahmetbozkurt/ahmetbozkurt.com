@@ -41,6 +41,7 @@ const restaurants = defineCollection({
 			googleReviewCountNow: z.number().optional(),
 			revisit: z.boolean(),
 			notes: z.string().optional(),
+			photos: z.array(z.string()).optional(),
 		}),
 });
 
