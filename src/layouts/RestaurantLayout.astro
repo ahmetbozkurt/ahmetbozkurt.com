@@ -18,120 +18,150 @@ const {
 
 const overallScore = calculateOverall(scores);
 const grade = toLetterGrade(overallScore);
+
+const categoryMap: Record<string, string> = {
+	'bufe': 'Büfe/Sokak', 'kafe': 'Kafe', 'kahvaltici': 'Kahvaltıcı',
+	'lokanta': 'Lokanta', 'restoran': 'Restoran', 'fast-food': 'Fast-Food',
+	'fine-dining': 'Fine-Dining', 'pastane-tatlici': 'Pastane'
+};
+const catLabel = categoryMap[category] || category;
+
+function getBar(val: number) {
+	const f = Math.round(val);
+	return '■'.repeat(f) + '□'.repeat(10 - f);
+}
+
+const diffGoogle = (googleNow && googleAtVisit) ? (googleNow - googleAtVisit).toFixed(1) : null;
+const isGoogleImproved = diffGoogle ? parseFloat(diffGoogle) > 0 : false;
 ---
 
 <html lang="en">
 	<head>
 		<BaseHead title={`${name} - Eats Review`} description={`Review of ${name} (${category})`} />
 		<style>
-			main {
-				width: calc(100% - 2em);
-				max-width: 100%;
-				margin: 0;
+			:root {
+				--eats-accent: #ff5a36;
+				--eats-accent-light: #ffe8e3;
 			}
-			.prose {
+			main {
 				width: 720px;
 				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 1em;
+				margin: 0 auto;
+				padding: 2em 0;
+			}
+			.review-header {
+				margin-bottom: 3em;
+				border-bottom: 2px solid var(--eats-accent-light);
+				padding-bottom: 2em;
+			}
+			.title-wrap {
+				display: flex;
+				align-items: baseline;
+				gap: 0.5em;
+				margin-bottom: 0.5em;
+				flex-wrap: wrap;
+			}
+			.restaurant-name {
+				font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+				font-size: 3em;
+				margin: 0;
+				color: rgb(var(--black));
+				line-height: 1.1;
+			}
+			.restaurant-grade {
+				font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+				font-size: 2em;
+				font-style: italic;
+				color: var(--eats-accent);
+				font-weight: 400;
+			}
+			.meta-line {
+				font-size: 0.95em;
+				color: rgb(var(--gray));
+				margin: 0 0 2em 0;
+			}
+			
+			/* Profile */
+			.taste-profile {
+				margin: 2em 0;
+			}
+			.taste-profile h3 {
+				font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+				font-size: 1.2em;
+				text-transform: uppercase;
+				letter-spacing: 2px;
+				color: rgb(var(--gray));
+				margin-bottom: 1em;
+				font-weight: 400;
+			}
+			.score-row {
+				display: flex;
+				align-items: center;
+				margin-bottom: 0.5em;
+				font-size: 0.95em;
+			}
+			.score-label {
+				width: 140px;
+				color: rgb(var(--black));
+			}
+			.score-label.primary {
+				font-weight: bold;
+				font-size: 1.1em;
+			}
+			.score-bar {
+				flex: 1;
+				color: var(--eats-accent);
+				letter-spacing: 2px;
+				font-family: monospace;
+			}
+			.score-num {
+				width: 40px;
+				text-align: right;
+				font-weight: bold;
 				color: rgb(var(--gray-dark));
 			}
-			.restaurant-header {
-				margin-bottom: 2em;
-				padding: 2em;
-				background: #f8f9fa;
-				border-radius: 12px;
-				border: 1px solid #eaeaea;
-				text-align: center;
+
+			.review-content {
+				font-size: 1.1em;
+				line-height: 1.8;
+				color: rgb(var(--gray-dark));
+				margin-bottom: 3em;
 			}
-			.restaurant-header h1 {
-				margin: 0 0 0.2em 0;
-				font-size: 2.5em;
-			}
-			.meta {
-				display: flex;
-				justify-content: center;
-				gap: 1em;
-				color: #555;
-				margin-bottom: 1.5em;
-			}
-			.meta span {
-				background: #e9ecef;
-				padding: 0.3em 0.8em;
-				border-radius: 20px;
+
+			.inline-details {
+				border-top: 1px solid #eaeaea;
+				padding-top: 2em;
 				font-size: 0.9em;
+				color: rgb(var(--gray-dark));
 			}
-			.score-board {
-				display: flex;
-				justify-content: space-between;
-				align-items: center;
-				background: white;
-				padding: 1.5em;
-				border-radius: 8px;
-				box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-			}
-			.main-score {
-				text-align: center;
-				padding-right: 2em;
-				border-right: 1px solid #eaeaea;
-			}
-			.main-score .grade {
-				font-size: 4em;
-				font-weight: 800;
-				line-height: 1;
-				color: #222;
-			}
-			.main-score .numeric {
-				font-size: 1.2em;
-				color: #666;
-			}
-			.sub-scores {
-				flex: 1;
+			.inline-details ul {
+				list-style-type: none;
+				padding: 0;
+				margin: 0;
 				display: grid;
-				grid-template-columns: repeat(3, 1fr);
+				grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 				gap: 1em;
-				padding-left: 2em;
 			}
-			.sub-score {
-				display: flex;
-				flex-direction: column;
-				align-items: center;
+			.inline-details li {
+				margin-bottom: 0.5em;
 			}
-			.sub-score strong {
-				font-size: 1.2em;
-				color: #333;
+			.inline-details strong {
+				color: rgb(var(--black));
+				font-weight: 600;
 			}
-			.sub-score span {
-				font-size: 0.8em;
-				text-transform: uppercase;
-				color: #777;
+			.google-trend.up { color: #10b981; }
+			.google-trend.down { color: #ef4444; }
+			
+			@media (max-width: 600px) {
+				.score-row {
+					flex-direction: column;
+					align-items: flex-start;
+					margin-bottom: 1em;
+				}
+				.score-num {
+					display: none;
+				}
 			}
-			.extra-details {
-				margin-top: 2em;
-				padding: 1.5em;
-				background: #fff;
-				border: 1px solid #eaeaea;
-				border-radius: 8px;
-			}
-			.extra-details h3 {
-				margin-top: 0;
-			}
-            
-            @media (max-width: 600px) {
-                .score-board {
-                    flex-direction: column;
-                    gap: 1em;
-                }
-                .main-score {
-                    border-right: none;
-                    border-bottom: 1px solid #eaeaea;
-                    padding-right: 0;
-                    padding-bottom: 1em;
-                }
-                .sub-scores {
-                    padding-left: 0;
-                }
-            }
 		</style>
 	</head>
 
@@ -139,46 +169,47 @@ const grade = toLetterGrade(overallScore);
 		<Header />
 		<main>
 			<article>
-				<div class="prose">
-					<div class="restaurant-header">
-						<h1>{name}</h1>
-						<div class="meta">
-							<span>{category}</span>
-							<span>📍 {location}</span>
-							<span>📅 <FormattedDate date={visitDate} /></span>
-						</div>
-						
-						<div class="score-board">
-							<div class="main-score">
-								<div class="grade">{grade}</div>
-								<div class="numeric">{overallScore} / 10</div>
-							</div>
-							<div class="sub-scores">
-								<div class="sub-score"><strong>{scores.lezzet}</strong><span>Lezzet</span></div>
-								<div class="sub-score"><strong>{scores.malzeme}</strong><span>Malz</span></div>
-								<div class="sub-score"><strong>{scores.porsiyon}</strong><span>Pors</span></div>
-								<div class="sub-score"><strong>{scores.servis}</strong><span>Servis</span></div>
-								<div class="sub-score"><strong>{scores.ortam}</strong><span>Ortam</span></div>
-								<div class="sub-score"><strong>{scores.fiyatPerformans}</strong><span>F/P</span></div>
-							</div>
-						</div>
+				<div class="review-header">
+					<div class="title-wrap">
+						<h1 class="restaurant-name">{name}</h1>
+						<span class="restaurant-grade">{grade}</span>
 					</div>
+					<p class="meta-line">
+						{catLabel} &nbsp;&mdash;&nbsp; 📍 {location} &nbsp;&mdash;&nbsp; 📅 Ziyaret: <FormattedDate date={visitDate} />
+					</p>
 
-					<div class="review-content">
-						<slot />
+					<div class="taste-profile">
+						<h3>Lezzet Profili</h3>
+						<div class="score-row"><div class="score-label primary">Lezzet (%35)</div><div class="score-bar">{getBar(scores.lezzet)}</div><div class="score-num">{scores.lezzet}</div></div>
+						<div class="score-row"><div class="score-label">Malzeme (%15)</div><div class="score-bar">{getBar(scores.malzeme)}</div><div class="score-num">{scores.malzeme}</div></div>
+						<div class="score-row"><div class="score-label">Servis (%15)</div><div class="score-bar">{getBar(scores.servis)}</div><div class="score-num">{scores.servis}</div></div>
+						<div class="score-row"><div class="score-label">Fiyat/Perf. (%15)</div><div class="score-bar">{getBar(scores.fiyatPerformans)}</div><div class="score-num">{scores.fiyatPerformans}</div></div>
+						<div class="score-row"><div class="score-label">Ortam (%10)</div><div class="score-bar">{getBar(scores.ortam)}</div><div class="score-num">{scores.ortam}</div></div>
+						<div class="score-row"><div class="score-label">Porsiyon (%10)</div><div class="score-bar">{getBar(scores.porsiyon)}</div><div class="score-num">{scores.porsiyon}</div></div>
 					</div>
+				</div>
 
-					<div class="extra-details">
-						<h3>Ekstra Detaylar</h3>
-						<ul>
-							{pricePerPerson && <li><strong>Kişi Başı Ortalama:</strong> {pricePerPerson} ₺</li>}
-							{googleAtVisit && <li><strong>Google Puanı (Ziyaret):</strong> {googleAtVisit} {googleReviewCountAtVisit ? `(${googleReviewCountAtVisit} yorum)` : ''}</li>}
-							{googleNow && <li><strong>Google Puanı (Güncel):</strong> {googleNow} {googleReviewCountNow ? `(${googleReviewCountNow} yorum)` : ''}</li>}
-							<li><strong>Tekrar Gidilir mi?</strong> {revisit ? 'Evet ✅' : 'Hayır ❌'}</li>
-							{comparedTo && <li><strong>Karşılaştırma:</strong> {comparedTo} ile {comparisonResult}</li>}
-						</ul>
-						{notes && <p><strong>Notlar:</strong> {notes}</p>}
-					</div>
+				<div class="review-content prose">
+					<slot />
+				</div>
+
+				<div class="inline-details">
+					<ul>
+						{pricePerPerson && <li><strong>Hesap:</strong> ~{pricePerPerson} ₺ / Kişi</li>}
+						<li><strong>Tekrar Gidilir mi?:</strong> {revisit ? 'Kesinlikle' : 'Pek sanmıyorum'}</li>
+						{googleNow && 
+							<li>
+								<strong>Google Puanı:</strong> {googleAtVisit} ➔ {googleNow} 
+								{diffGoogle && diffGoogle !== "0.0" && (
+									<span class={`google-trend ${isGoogleImproved ? 'up' : 'down'}`}>
+										({isGoogleImproved ? '+' : ''}{diffGoogle})
+									</span>
+								)}
+							</li>
+						}
+						{comparedTo && <li><strong>Kıyasla:</strong> {comparedTo} ({comparisonResult})</li>}
+					</ul>
+					{notes && <p style="margin-top: 1.5em; font-style: italic;"><strong>Notlar:</strong> {notes}</p>}
 				</div>
 			</article>
 		</main>
