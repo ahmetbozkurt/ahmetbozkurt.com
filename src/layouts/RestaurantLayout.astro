@@ -253,6 +253,24 @@ const formattedDate = visitDate.toLocaleDateString('tr-TR', { day: '2-digit', mo
 				cursor: pointer;
 				font-family: monospace;
 			}
+			.nav-btn {
+				position: absolute;
+				top: 50%;
+				transform: translateY(-50%);
+				background: rgba(0,0,0,0.5);
+				border: none;
+				color: white;
+				font-size: 2em;
+				padding: 0.2em 0.5em;
+				cursor: pointer;
+				border-radius: 4px;
+				transition: background 0.2s;
+			}
+			.nav-btn:hover {
+				background: rgba(0,0,0,0.8);
+			}
+			.prev-btn { left: 20px; }
+			.next-btn { right: 20px; }
 		</style>
 	</head>
 
@@ -349,7 +367,9 @@ const formattedDate = visitDate.toLocaleDateString('tr-TR', { day: '2-digit', mo
 		<dialog id="lightbox">
 			<div class="lightbox-content">
 				<button class="close-btn" id="closeLightbox">×</button>
+				<button class="nav-btn prev-btn" id="prevLightbox">❮</button>
 				<img src="" alt="Tam Ekran Görüntü" class="lightbox-img" id="lightboxImg" />
+				<button class="nav-btn next-btn" id="nextLightbox">❯</button>
 			</div>
 		</dialog>
 
@@ -357,14 +377,28 @@ const formattedDate = visitDate.toLocaleDateString('tr-TR', { day: '2-digit', mo
 			const dialog = document.getElementById('lightbox') as HTMLDialogElement;
 			const img = document.getElementById('lightboxImg') as HTMLImageElement;
 			const closeBtn = document.getElementById('closeLightbox');
+			const prevBtn = document.getElementById('prevLightbox');
+			const nextBtn = document.getElementById('nextLightbox');
 			
-			document.querySelectorAll('.gallery-thumb').forEach((thumb) => {
-				thumb.addEventListener('click', (e) => {
-					const src = (e.target as HTMLImageElement).getAttribute('data-src');
-					if (src) {
-						img.src = src;
-						dialog.showModal();
-					}
+			const thumbs = Array.from(document.querySelectorAll('.gallery-thumb'));
+			let currentIndex = 0;
+
+			function showImage(index: number) {
+				if (thumbs.length === 0) return;
+				if (index < 0) index = thumbs.length - 1;
+				if (index >= thumbs.length) index = 0;
+				currentIndex = index;
+				
+				const src = thumbs[currentIndex].getAttribute('data-src');
+				if (src) {
+					img.src = src;
+				}
+			}
+
+			thumbs.forEach((thumb, index) => {
+				thumb.addEventListener('click', () => {
+					showImage(index);
+					dialog.showModal();
 				});
 			});
 
@@ -374,6 +408,21 @@ const formattedDate = visitDate.toLocaleDateString('tr-TR', { day: '2-digit', mo
 
 			dialog?.addEventListener('click', (e) => {
 				if (e.target === dialog) dialog.close();
+			});
+
+			prevBtn?.addEventListener('click', (e) => {
+				e.stopPropagation();
+				showImage(currentIndex - 1);
+			});
+			nextBtn?.addEventListener('click', (e) => {
+				e.stopPropagation();
+				showImage(currentIndex + 1);
+			});
+
+			document.addEventListener('keydown', (e) => {
+				if (!dialog.open) return;
+				if (e.key === 'ArrowLeft') showImage(currentIndex - 1);
+				if (e.key === 'ArrowRight') showImage(currentIndex + 1);
 			});
 		</script>
 	</body>
