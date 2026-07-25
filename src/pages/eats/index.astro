@@ -18,6 +18,9 @@ const restaurants = (await getCollection('restaurants')).sort((a, b) => {
 	<head>
 		<BaseHead title={`Eats - ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
 		<style>
+			body {
+				background: #FAF6F0 !important; /* Warm off-white background to fit the receipt theme */
+			}
 			main {
 				width: 960px;
 				max-width: calc(100% - 2em);
@@ -45,20 +48,21 @@ const restaurants = (await getCollection('restaurants')).sort((a, b) => {
 				transition: background 0.2s;
 			}
 			.filter-btn.active {
-				background: var(--accent);
-				color: white;
+				background: #2B2620; /* var(--ink) */
+				color: #F2E8D5; /* var(--paper) */
+				border-color: #2B2620;
 			}
 			.methodology-link {
 				display: inline-block;
 				margin-top: 0.8em;
 				font-size: 0.95em;
-				color: var(--accent);
+				color: #A33027; /* var(--stamp) */
 				text-decoration: none;
 				border-bottom: 1px solid transparent;
 				transition: border-bottom-color 0.2s;
 			}
 			.methodology-link:hover {
-				border-bottom-color: var(--accent);
+				border-bottom-color: #A33027;
 			}
 			.restaurant-grid {
 				display: grid;
